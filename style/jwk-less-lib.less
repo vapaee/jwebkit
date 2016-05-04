@@ -1,0 +1,386 @@
+/* basicas */
+
+.set-flat(@width: 3px; @padding: 5px; @who: "panel") when (@who = "panel") {
+    padding: @padding;
+    border-style: solid;
+    border-width: @width;    
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    & > table > tbody > tr > td {
+        &.top       { background-color: transparent; }
+        &.bottom    { background-color: transparent; }
+        &.left      { background-color: transparent; }
+        &.right     { background-color: transparent; }
+        &.container { padding: @padding; }
+        &.corner    { background-color: transparent; }
+        &.corner:before {
+            border-top-color: transparent;
+            border-left-color: transparent;
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+            border-style: solid;
+        }
+    }    
+}
+.set-inset(@width: 3px; @padding: 5px; @who: "panel") when (@who = "panel") {
+
+    & > table > tbody > tr > td {
+        &.top       { background-color: @inset_top_border_color;         }
+        &.bottom    { background-color: @inset_bottom_border_color;  }
+        &.left      { background-color: @inset_left_border_color;         }
+        &.right     { background-color: @inset_right_border_color;  }
+        &.container { padding: @padding; }
+        &.corner    { background-color: transparent; }
+        &.corner:before {
+            border-top-color:    @inset_top_border_color;
+            border-left-color:   @inset_left_border_color;
+            border-bottom-color: @inset_bottom_border_color;
+            border-right-color:  @inset_right_border_color;  
+            border-style: solid;
+        }
+    }
+    
+    & > table > tbody > tr > td {
+        &.corner:before { 
+            border-width: @width; 
+        }
+        &.right, &.left {
+            width:  @width;
+        }
+        &.top, &.bottom  {
+            height:  @width;
+        } 
+        & > img {
+            width:  @width;
+            height:  @width;
+        }
+    }    
+}
+
+@emboss_top_border_color: rgba(255,255,255, 0.3);
+@emboss_left_border_color: rgba(255,255,255, 0.2);
+@emboss_right_border_color: rgba(0,0,0,0.2);
+@emboss_bottom_border_color: rgba(0,0,0,0.4); 
+@inset_top_border_color: @emboss_bottom_border_color;
+@inset_left_border_color: @emboss_right_border_color;
+@inset_right_border_color: @emboss_left_border_color;
+@inset_bottom_border_color: @emboss_top_border_color; 
+
+.set-emboss(@width: 3px; @padding: 5px; @who: "panel") when (@who = "panel") {
+
+    & > table > tbody > tr > td {
+        &.top       { background-color: @emboss_top_border_color; }
+        &.bottom    { background-color: @emboss_bottom_border_color;        }
+        &.left      { background-color: @emboss_left_border_color; }
+        &.right     { background-color: @emboss_right_border_color;        }
+        &.container { padding: @padding; }
+        &.corner    { background-color: transparent; }
+        &.corner:before {
+            border-bottom-color: @emboss_bottom_border_color;
+            border-right-color:  @emboss_right_border_color;
+            border-top-color:    @emboss_top_border_color;
+            border-left-color:   @emboss_left_border_color;
+            border-style: solid;
+        }
+    }
+    
+    & > table > tbody > tr > td {
+        &.corner:before { 
+            border-width: @width; 
+        }
+        &.right, &.left {
+            width:  @width;
+        }
+        &.top, &.bottom  {
+            height:  @width;
+        } 
+        & > img {
+            width:  @width;
+            height:  @width;
+        }
+    }
+}
+
+.set-emboss(@width: 3px; @padding; @who) when (@who = "button") {
+    padding: @padding;
+    border-style: solid;
+    border-width: @width;
+    border-bottom-color: rgba(0,0,0,0.4);
+    border-right-color: rgba(0,0,0,0.2);
+    border-top-color: rgba(255,255,255, 0.3);
+    border-left-color: rgba(255,255,255, 0.2);
+}
+
+.set-flat(@width: 3px; @padding; @who) when (@who = "button") {
+    padding: @padding;
+    border-style: solid;
+    border-width: @width;    
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+}
+
+.set-inset(@width: 3px; @padding; @who) when (@who = "button") {
+    padding: @padding;
+    border-style: solid;
+    border-width: @width;
+    border-top-color: rgba(0,0,0,0.4);
+    border-left-color: rgba(0,0,0,0.2);
+    border-bottom-color: rgba(255,255,255, 0.3);
+    border-right-color: rgba(255,255,255, 0.2);  
+ }
+
+//-------------------------------------------------------------------------------------------
+
+.set-colors(@who) when (@who = "splitter") {
+    background-color: darken(@emboss_bg_color, 10%);
+}
+.set-colors(@who) when (@who = "background") {
+    background-color: @background_bg_color;
+    background-image: @background_bg_image;        
+}
+.set-font(@who) when (@who = "body") {
+    font-family: @font_family;
+    font-size: @font_size;
+    color: @font_color;
+}
+.display-inline-flex() {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flex;
+    display: inline-flex;    
+}
+.display-flex() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.flex-wrap(@v) {
+    -webkit-flex-wrap: @v;
+    -moz-flex-wrap: @v;
+    -ms-flex-wrap: @v;
+    -o-flex-wrap: @v;
+    flex-wrap: @v;
+}
+.flex-direction(@v) {
+    -webkit-flex-direction: @v;
+    -moz-flex-direction: @v;
+    -ms-flex-direction: @v;
+    -o-flex-direction: @v;
+    flex-direction: @v;
+}
+.flex-flow(@v) {
+    -webkit-flex-flow: @v;
+    -moz-flex-flow: @v;
+    -ms-flex-flow: @v;
+    -o-flex-flow: @v;
+    flex-flow: @v;
+}
+.align-items(@v) {
+    -webkit-align-items: @v;
+    -moz-align-items: @v;
+    -ms-align-items: @v;
+    -o-align-items: @v;
+    align-items: @v;
+}
+.flex-grow(@v) {
+    -webkit-flex-grow: @v;
+    -moz-flex-grow: @v;
+    -ms-flex-grow: @v;
+    -o-flex-grow: @v;
+    flex-grow: @v;
+}
+.justify-content(@v) {
+    -webkit-justify-content: @v;
+    -moz-justify-content: @v;
+    -ms-justify-content: @v;
+    -o-justify-content: @v;
+    justify-content: @v;
+}
+.align-content(@v) {
+    -webkit-align-content: @v;
+    -moz-align-content: @v;
+    -ms-align-content: @v;
+    -o-align-content: @v;
+    align-content: @v;
+}
+.box-shadow(@style) {
+    -webkit-box-shadow: @style;
+    -moz-box-shadow:    @style;
+    box-shadow:         @style;
+}
+
+.border-radius(@num: 5px) {
+    -webkit-border-radius: @num;
+    -moz-border-radius: @num;
+    -ms-border-radius: @num;
+    border-radius: @num;
+}
+
+.transform(@t) {
+    -ms-transform: @t;
+    -webkit-transform: @t;
+    -moz-transform: @t;
+    -o-transform: @t;
+    transform: @t;     
+}
+
+.linear-gradient-2(@deg, @c1, @c2) {
+    background: @c1;
+    background: -webkit-linear-gradient(@deg, @c1, @c2);
+    background: -o-linear-gradient(@deg, @c1, @c2);
+    background: -moz-linear-gradient(@deg, @c1, @c2);
+    background: linear-gradient(@deg, @c1, @c2);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=@c1, endColorstr=@c2, GradientType=0 );
+}
+
+.linear-gradient-3(@deg, @c1, @c2, @c3) {
+    background: @c1;
+    background: -webkit-linear-gradient(@deg, @c1, @c2, @c3);
+    background: -o-linear-gradient(@deg, @c1, @c2, @c3);
+    background: -moz-linear-gradient(@deg, @c1, @c2, @c3);
+    background: linear-gradient(@deg, @c1, @c2, @c3);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=@c1, endColorstr=@c3, GradientType=0 );
+}
+
+.linear-gradient-4(@deg, @c1, @c2, @c3, @c4) {
+    background: @c1;
+    background: -webkit-linear-gradient(@deg, @c1, @c2, @c3, @c4);
+    background: -o-linear-gradient(@deg, @c1, @c2, @c3, @c4);
+    background: -moz-linear-gradient(@deg, @c1, @c2, @c3, @c4);
+    background: linear-gradient(@deg, @c1, @c2, @c3, @c4);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=@c1, endColorstr=@c4, GradientType=0 );
+}
+
+.linear-gradient(@color, @deg: 180deg, @percent: 40%) {
+    .linear-gradient-3(@deg, lighten(@color, 20%), @color @percent, darken(@color, 20%));
+}
+
+// 
+
+.radial-gradient-2(@c1, @c2) {
+    background: @c1;
+    background: -webkit-radial-gradient(center, ellipse cover, @c1, @c2);
+    background: -o-radial-gradient(center, ellipse cover, @c1, @c2);
+    background: -moz-radial-gradient(center, ellipse cover, @c1, @c2);
+    background: radial-gradient(ellipse at center, @c1, @c2);
+}
+
+.radial-gradient-3(@c1, @c2, @c3) {
+    background: @c1;
+    background: -webkit-radial-gradient(center, ellipse cover, @c1, @c2, @c3);
+    background: -o-radial-gradient(center, ellipse cover, @c1, @c2, @c3);
+    background: -moz-radial-gradient(center, ellipse cover, @c1, @c2, @c3);
+    background: radial-gradient(ellipse at center, @c1, @c2, @c3);
+}
+
+.radial-gradient-4(@c1, @c2, @c3, @c4) {
+    background: @c1;
+    background: -webkit-radial-gradient(center, ellipse cover, @c1, @c2, @c3, @c4);
+    background: -o-radial-gradient(center, ellipse cover, @c1, @c2, @c3, @c4);
+    background: -moz-radial-gradient(center, ellipse cover, @c1, @c2, @c3, @c4);
+    background: radial-gradient(ellipse at center, @c1, @c2, @c3, @c4);
+}
+
+.radial-gradient(@color) {
+    .radial-gradient-3(lighten(@color, 20%), @color, darken(@color, 20%));
+}
+
+.animation-name(@t) {
+    -ms-animation-name: @t;
+    -webkit-animation-name: @t;
+    -moz-animation-name: @t;
+    -o-animation-name: @t;
+    animation-name: @t;         
+}
+.animation-duration(@t) {
+    -ms-animation-duration: @t;
+    -webkit-animation-duration: @t;
+    -moz-animation-duration: @t;
+    -o-animation-duration: @t;
+    animation-duration: @t;         
+}
+.animation-timing-function(@t) {
+    -ms-animation-timing-function: @t;
+    -webkit-animation-timing-function: @t;
+    -moz-animation-timing-function: @t;
+    -o-animation-timing-function: @t;
+    animation-timing-function: @t;         
+}
+.animation-delay(@t) {
+    -ms-animation-delay: @t;
+    -webkit-animation-delay: @t;
+    -moz-animation-delay: @t;
+    -o-animation-delay: @t;
+    animation-delay: @t;         
+}
+.animation-iteration-count(@t) {
+    -ms-animation-iteration-count: @t;
+    -webkit-animation-iteration-count: @t;
+    -moz-animation-iteration-count: @t;
+    -o-animation-iteration-count: @t;
+    animation-iteration-count: @t;         
+}
+.animation-direction(@t) {
+    -ms-animation-direction: @t;
+    -webkit-animation-direction: @t;
+    -moz-animation-direction: @t;
+    -o-animation-direction: @t;
+    animation-direction: @t;         
+}
+.animation-play-state(@t) {
+    -ms-animation-play-state: @t;
+    -webkit-animation-play-state: @t;
+    -moz-animation-play-state: @t;
+    -o-animation-play-state: @t;
+    animation-play-state: @t;         
+}
+.animation(@t) {
+    -ms-animation: @t;
+    -webkit-animation: @t;
+    -moz-animation: @t;
+    -o-animation: @t;
+    animation: @t;     
+}
+.transition(@t) {
+    -ms-transition: @t;
+    -webkit-transition: @t;
+    -moz-transition: @t;
+    -o-transition: @t;
+    transition: @t;     
+}
+.transition-delay(@t) {
+    -ms-transition-delay: @t;
+    -webkit-transition-delay: @t;
+    -moz-transition-delay: @t;
+    -o-transition-delay: @t;
+    transition-delay: @t;     
+}
+.transition-timing-function(@t) {
+    -ms-transition-timing-function: @t;
+    -webkit-transition-timing-function: @t;
+    -moz-transition-timing-function: @t;
+    -o-transition-timing-function: @t;
+    transition-timing-function: @t;     
+}
+.transition-duration(@t) {
+    -ms-transition-duration: @t;
+    -webkit-transition-duration: @t;
+    -moz-transition-duration: @t;
+    -o-transition-duration: @t;
+    transition-duration: @t;     
+}
+
+.transition-property(@t) {
+    -ms-transition-property: @t;
+    -webkit-transition-property: @t;
+    -moz-transition-property: @t;
+    -o-transition-property: @t;
+    transition-property: @t;     
+}

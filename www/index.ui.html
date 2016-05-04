@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>jwebkit.ui</title>
+        <script src="../dist/jwebkit.js"></script>
+        <script src="../dist/jwebkit.ui.js"></script>
+        <link rel="stylesheet/less" type="text/css" href="../style/jwk-ui.less">
+        <script src="js/less.min.js"></script>
+    </head>
+    <body fullbleed>
+        <script>
+            
+            
+            // ---------------------------------------------------------------   
+            /*
+            var data = new jwk.Object();
+            data.set("layout", ["a", "b", "c"]);
+            jwk.ui.display_component({
+                "data": data,
+                "ui_type": "panel.layout",
+                "layout": "<<data.layout>>",
+                "class": "expand",
+                "children": {
+                    "a": {
+                        "ui_type": "panel",
+                        "class": "expand",
+                        "children": {
+                            "b": {
+                                "ui_type": "panel.inset",
+                                "class": "expand",
+                                "text": "Section A"
+                            }
+                        }
+                    },
+                    "b": {
+                        "ui_type": "panel",
+                        "text": "Section B"
+                    },
+                    "c": {
+                        "ui_type": "panel",                        
+                        "text": "Section CCCCCC"
+                    }
+                }                
+            });
+                        
+            setTimeout(function() {
+                data.set("layout", ["a", "b"]);
+            }, 2000);
+            */
+            // ---------------------------------------------------------------
+            /*
+            var data = new jwk.Object();            
+            jwk.ui.display_component({
+                "data": data,
+                "ui_type": "panel.inset",
+                "class": "expand",
+                "children": {
+                    "section": {
+                        "ui_type": "panel.sections",
+                        "class": "expand",
+                        "value": "<<data.my_section>>",
+                        "hide_tabs": true,
+                        "children": {
+                            "a": {
+                                "selected": true,
+                                "ui_type": "panel",
+                                "tab": "Section A",
+                                "text": "Section A"
+                            },
+                            "b": {
+                                "ui_type": "panel",
+                                "tab": "Section B",
+                                "text": "Section B"
+                            },
+                            "c": {
+                                "ui_type": "panel",
+                                "tab": "Section C",
+                                "text": "Section CCCCCC"
+                            }
+                        }
+                    } 
+                }                
+            });
+                        
+            setTimeout(function() { data.set("my_section", "b"); }, 1000);
+            setTimeout(function() { data.set("my_section", "a"); }, 1500);
+            setTimeout(function() { data.set("my_section", "c"); }, 2000);
+            */
+            // ---------------------------------------------------------------
+            
+            var data = new jwk.Object();            
+            data.set("showtext", function () {
+                console.log("showtext", (0 + this.coso) < 25);
+                return (0 + this.coso) < 25;
+            },  { dependencies: ["coso"] });
+            jwk.ui.display_component({
+                "data": data,
+                "ui_type": "panel.inset",
+                "class": "expand",
+                "children": {
+                    "b4": {
+                        "ui_type": "label",
+                        "value": "VISIBLE",
+                        "renderize": "<<data.showtext>>",
+                    },
+                    "b5": {
+                        "ui_type": "label",
+                        "value": "NOT VISIBLE",
+                        "renderize": "<<#not data.showtext>>",                        
+                    },
+                    "b1": {
+                        "ui_type": "input",
+                        "value": "<<data.coso>>",
+                    }, 
+                    "b2": {
+                        "ui_type": "button",
+                        "text": "<<data.coso>>",
+                    },
+                    "b3": {
+                        "ui_type": "input.range",
+                        "value": "<<data.coso>>",
+                    },
+                }                
+            });
+            
+            data.set("coso", 1);
+            //data.set("showtext", true);
+            setTimeout(function() { data.set("coso", 20); }, 1000);
+            setTimeout(function() { data.set("coso", 24); }, 1500);
+            setTimeout(function() { data.set("coso", 34); }, 2000);
+            //setTimeout(function() {data.set("showtext", false); }, 1000);
+            
+            // ---------------------------------------------------------------
+            /*
+            var brief = "texto-muy-largo-que-rompe-las-pelotas-que-sea-tan-largo-la-puta-que-lo-pario";
+            var list = [
+                { "owner":"A3", "name":"Baf", "version":"C", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A7", "name":"B23", "version":"G", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A2", "name":"B24", "version":"D", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A5", "name":"B23", "version":"F", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A9", "name":"Bdd", "version":"I", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A5", "name":"B3r", "version":"E", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A1", "name":"B2", "version":"A", "type":"type", "codetype":"codetype", "brief":brief, "date":"date" },
+                { "owner":"A8", "name":"Bdd", "version":"H", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A2", "name":"Bs", "version":"B", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A8", "name":"B123", "version":"J", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+                { "owner":"A2", "name":"B2", "version":"K", "type":"type", "codetype":"codetype", "brief":"brief", "date":"date" },
+            ]
+                            
+            data.set("packages.labels", ["Owner", "Name", "Version", "Type", "Codetype", "Brief", "Date"], {deep: true});
+            data.set("packages.fields", ["owner", "name", "version", "type", "codetype", "brief", "date"], {deep: true});
+            data.set("packages.rows", list, {deep: true});
+           
+                    
+            
+            jwk.ui.display_component({
+                "data": data,
+                "ui_type": "panel.inset",
+                "class": "expand",
+                "children": {
+                    "my_table": {
+                        "ui_type": "table",
+                        "class": "expand",
+                        "labels": "<<data.packages.labels>>",
+                        "fields": "<<data.packages.fields>>",
+                        "value": "<<data.packages.rows>>"
+                    } 
+                }                
+            });
+            */
+            // --------------------------------------------------------------
+            
+            
+            
+            
+        </script>
+    </body>
+</html>

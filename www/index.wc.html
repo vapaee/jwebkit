@@ -1,0 +1,118 @@
+<!doctype>
+
+<html>
+    <head>
+        <title>jwebkit.wc</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+                
+        <link rel="import" href="../bower_components/polymer/polymer.html">
+        <!--
+        <link rel="import" href="../bower_components/core-icons/core-icons.html">
+
+        <link rel="import" href="../bower_components/core-icon/core-icon.html">
+        <link rel="import" href="../bower_components/core-header-panel/core-header-panel.html">
+        <link rel="import" href="../bower_components/core-drawer-panel/core-drawer-panel.html">
+        <link rel="import" href="../bower_components/core-menu/core-menu.html">
+        <link rel="import" href="../bower_components/core-menu/core-submenu.html">
+        <link rel="import" href="../bower_components/core-item/core-item.html">
+        <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+
+        <link rel="import" href="../bower_components/core-icons/social-icons.html">
+        <link rel="import" href="../bower_components/core-icons/notification-icons.html">
+        -->
+        
+        <!--link rel="stylesheet/less" href="../style/jwk-ui-defskin.less">
+        <link rel="stylesheet/less" href="../style/jwk-ui-core.less">
+        <link rel="stylesheet/less" href="style/skin.less">
+            
+        <script src="../dist/jwebkit.js"></script>
+        <script src="../dist/jwebkit.ui.js"></script>
+        <script src="../dist/jwebkit.wc.js"></script-->
+        
+    </head>
+    
+    <body fullbleed>     
+        
+
+<dom-module id="x-foo">
+    <template>    
+            <div>{{titulo}}</div>
+            <hr>
+            <div id="aaa"></div>
+            <input value="{{titulo::input}}"> (cambia cuando tecleás)<br>
+            <input value="{{titulo::change}}"> (cambia cuando das enter)<br>
+            <button on-click="foo">Foo</button>
+            <button on-click="coso">Coso</button>          
+    </template>
+</dom-module>
+
+<script>
+    // https://github.com/Polymer/polymer/blob/0.8-preview/PRIMER.md
+    Polymer({
+        is: 'x-foo',
+        properties: {            
+            titulo: {
+                type: String,
+                observer: 'tituloChanged'
+            },            
+            userName: String,
+        },
+        ready: function() {
+            this.$ .aaa.textContent = "ASDASD";
+        },
+        foo: function() {
+            this.titulo = "FOO";
+        },
+        coso: function() {
+            this.titulo = "COSO";
+        },
+        tituloChanged: function (value, oldValue) {
+            console.log("tituloChanged", oldValue, "->", value);
+        }
+    });
+</script>        
+        
+<x-foo user-name="Scott" titulo="Titulo seteado en el propio tag"></x-foo>
+        
+        <!--template id="auto-bind-demo" is="auto-binding" -->
+        <template id="auto-bind-demo"  is="x-autobind">
+            <!--jwk-button emboss label="{{titulo}}"></jwk-button-->
+            <!--jwk-panel flex vertical layout style="height:100vh">
+                <jwk-panel id="header-panel" layout horizontal emboss-biggest>
+                    <div class="title">{{titulo}}</div>
+                    <span flex></span>
+                    <core-icon-button icon="account-box">Log in</core-icon-button>                
+                    <span indent></span>
+                </jwk-panel>
+                <jwk-panel flex horizontal layout>
+                    <jwk-panel id="menu-panel" emboss>
+                    </jwk-panel>
+                    <jwk-panel flex id="main-panel" emboss-big>                
+                        <jwk-panel expand>
+                            <jwk-button emboss on-click={{foo}}>Simple Button</jwk-button>
+                            <jwk-button emboss label="Labeled Button"></jwk-button>
+                            <input id="coso" type="text" value={{titulo}}>
+                        </jwk-panel>
+                    </jwk-panel>
+                </jwk-panel>
+                <jwk-panel id="footer-panel" emboss-small>
+                    Pie
+                </jwk-panel>
+            </jwk-panel-->
+        </template>
+        
+        <script>
+            var t = document.querySelector('#auto-bind-demo');
+            t.titulo = "AAAA";
+            t.foo = function() { t.titulo = "FOO"; };
+            t.coso = function() { t.titulo = "Coso"; };
+        </script>
+
+    </body>
+    <script type="text/javascript">less = { env: 'development' };</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.0/less.min.js"></script>
+</html>

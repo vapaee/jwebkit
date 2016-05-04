@@ -1,0 +1,6 @@
+render.SelectableController
+- no lo probé pero viendo el código me doy cuenta que si le ponés como group una string
+  él selectable lo va a tomar como un ID de grupo y se lo va a escribir al DOM element selectable-group="coso".
+  Pero también admite un valor que represente un query válido tipo ".este-grupo" y eso así como está lo va a marcar como selectable-group=".este-grupo"
+  Después cuando se resuelva el grupo, primero va a intentar levantar todos los elementos que tengan la marca
+  en vez de hacer el query como corresponde.

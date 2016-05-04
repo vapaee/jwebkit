@@ -1,0 +1,23 @@
+/* basicas */
+@import "jwk-less-lib";
+
+[layout][horizontal], [layout][vertical] {
+    
+}
+
+jwk-panel {
+    display: block;
+    position: relative;
+
+    &[expand] {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        padding: inherit;
+    }    
+    
+}
+
+jwk-button {
+    position: relative;
+    display: inline-block;
+}

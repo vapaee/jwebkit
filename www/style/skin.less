@@ -1,0 +1,95 @@
+#main-panel > jwk-panel {
+    background-color: lightgray;
+}
+
+
+
+
+
+/*
+div[layout] {    
+    background-color: darkslategrey;
+    padding: 5px;
+    & > div {     
+        background-color:aliceblue;
+    }
+    
+    &[horizontal] > div + div {
+        margin-left: 5px; 
+    }
+    
+    & > div[layout][horizontal] > div {
+        
+    }
+    &[vertical] > div + div {
+        margin-top: 5px;
+    }
+    & > div[layout] { 
+        background-color: transparent;
+        padding: 0px;
+    }
+}
+
+*/
+
+
+span[indent] {
+    margin-left: 50px;
+}
+
+div[layout] {
+    & > div:not([layout]) {
+        padding: 5px;
+    }    
+    & > .btn {
+        margin: auto;
+    }    
+}
+
+core-icon-button {
+    font-size: 12px;
+    font-weight: bold;
+    vertical-align: bottom;
+    margin: auto;
+    &:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+}
+
+#header-panel, #footer-panel {
+    background-color: darkslategrey;
+    color: azure;
+    // z-index: 10;
+}
+
+#header-panel {
+    // -webkit-box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.75);
+    // -moz-box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.75);
+    // box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.75);
+    .title {
+        font-weight: bold;
+        font-size: 20px;        
+    }
+    
+    & > * {
+        margin: auto 20px;
+    }
+}
+
+#menu-panel {
+    background-color: slategrey;
+    color: white;
+    min-width: 250px;
+    core-menu {
+        margin-right: 0px;
+    }
+    
+    core-submenu::shadow core-item, core-item {        
+        padding-right: 20px;
+        min-height: 30px;
+        &::shadow core-icon {
+            margin: 0 16px 0 0;
+        }
+    }
+}
+

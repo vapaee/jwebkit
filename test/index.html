@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>jwebkit.js</title>
+        <script src="../dist/jwebkit.js"></script>    
+        <script src="../lib/jquery.js"></script>    
+        
+        
+        
+        <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.18.0.css">
+        <script src="//code.jquery.com/qunit/qunit-1.18.0.js"></script>
+        <script src="js/qunit-assert-compare.js"></script>
+        <script>
+            if (typeof QUnit == "undefined") {
+                var QUnit = {
+                    test: function (name, callback) {
+                        document.addEventListener("DOMContentLoaded", function(event) { 
+                            callback({
+                                equal: function(actual, expected, algo){
+                                    console.assert(actual == expected, actual, expected, algo);
+                                }
+                            });
+                        });                    
+                    }
+                } 
+            }
+        </script>
+        
+        
+        
+        
+        <script src="tests/test-jwk.query.js"></script>
+        <!--script src="tests/test-jwk.ajax.js"></script-->
+    </head>
+    <style>
+        #test-area * {
+            padding: 5px;
+            border: 1px solid black;
+            display: inline-block;            
+        }
+        #test-area *:before {
+            content: attr(id);
+        }
+    </style>
+    <body fullbleed>
+        <div id="qunit"></div>
+        <div id="test-area"></div>
+    </body>
+    <script>
+        
+    </script>
+</html>

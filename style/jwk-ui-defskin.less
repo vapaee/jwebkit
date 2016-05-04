@@ -1,0 +1,55 @@
+/* basicas */
+@import "jwk-less-lib";
+
+@default_emboss:  3px;
+@emboss_smallest: 1px;
+@emboss_small:    2px;
+@emboss_big:      5px;
+@emboss_biggest:  8px;
+
+@padding:         5px;
+@font_family:     Arial, Helvetica, sans-serif;
+
+.make_emboss(@n) {
+    padding: @n;
+    &:before {
+        pointer-events: none;
+        content: ' ';
+        display: block;
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+
+        border-width: @n;
+        border-style: solid;
+        border-top-color: rgba(255,255,255,0.35);
+        border-right-color: rgba(0,0,0,0.15);
+        border-left-color: rgba(255,255,255,0.2);
+        border-bottom-color: rgba(0,0,0,0.3);
+        z-index: 1;
+    }
+}
+
+jwk-panel, jwk-button {
+    font-family: @font_family;
+}
+
+jwk-panel, jwk-button {
+    &[emboss-smallest]  { .make_emboss(@emboss_smallest); }
+    &[emboss-small]     { .make_emboss(@emboss_small); }
+    &[emboss]           { .make_emboss(@default_emboss); }
+    &[emboss-big]       { .make_emboss(@emboss_big); }
+    &[emboss-biggest]   { .make_emboss(@emboss_biggest); }
+}
+
+jwk-button {
+    padding: @padding;
+    &[emboss] {
+        padding: @padding + @default_emboss;
+        &:active:before {
+            border-top-color: rgba(0,0,0,0.3);
+            border-right-color: rgba(255,255,255,0.15);
+            border-left-color: rgba(0,0,0,0.15);
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+    }
+}

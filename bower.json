@@ -1,0 +1,51 @@
+{
+  "name": "jwebkit.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/vapaee/jwebkit",
+  "description": "Generic webapp library set. It was create to build jwebdesk.",
+  "main": "main.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "jwebdesk",
+    "webapp",
+    "cross domain",  
+    "ui",
+    "jwebkit",
+    "jwk"
+  ],
+  "authors": [
+    {
+      "name": "Viterbo Rodríguez Flániguen",
+      "email": "viter.rod@gmail.com",
+      "homepage": "http://viterborodriguez.com" 
+    }
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "lib",
+    "src",
+    "www",
+    "style/jwk-ui-core.less",
+    "style/jwk-ui-defskin.less",
+    "style/prueba.less",
+    ".gitignore",
+    "bower.json",
+    "bugs.txt",
+    "Gruntfile.js",
+    "Notas.txt",
+    "package.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "qunit": "~1.18.0"
+  },
+  "dependencies": {
+    "treequery": "~0.1.0"
+  }
+}

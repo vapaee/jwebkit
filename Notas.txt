@@ -1,0 +1,105 @@
+Si le cambias el parámetro layout al componnte panel.layout pierde los nietos.
+tuve que meter la siguiente linea (608) en el jquery porque me explotaba
+if (!rootjQuery) { rootjQuery = jQuery(document); }
+
+
+
+
+
+Nuevo jwk.UI:
+requerimientos:
+  - cambiar la sintaxis <<coso>> por {{coso}}
+  - cada componente debe definir bien la lista de eventos propios
+  - cada componente debe definir que tipo de dato acepta o espera como "value" y validarlo
+    (una list puede aceptar un "array", un imput puede aceptar "string" o "number")
+  - cambiar el antiguo "datapath":"path a la variable" por "value": "{{variable}}"
+  - DOM Element: sacar(path, ui, namespace, ui_type) y poner (jwk-component=<<namespace>>/<<ui_type>>)
+  - cada componente tiene un target (DOM element).
+  - cambiar el "parent_for" por "container" y hacer las consultas como con jquery pero con javascript
+    ej: document.querySelector
+  - en jwk.ui.Component.prototype.init_settings se hace jwk.extend(this, _settings); --> cambiarlo por this.map(_settings);
+    
+
+jwk.ui.list: console.log("acá es donde se puede hacer magia");
+Para controlar el ancho de las columnas sería bueno crear una variable del settings.template que resuelva eso llamando a una función y en la función basarnos en la variable local this.columns
+
+
+
+--------------------------
+structure
+my_data
+template
+settings
+features (selectable, sortable, draggable)
+component-manager (singleton que tenga la lista de componentes que )
+
+--------------------------
+
+<jwk-layout layout="['coso', 'otro_coso']" data="">
+    <jwk-input layout-id="coso" type="text" value="{{variable}}" />
+    <jwk-button layout-id="otro_coso" text="{{variable}}" />
+</jwk-layout>
+
+jwk.ui.display_component({
+    "ui_type": "layout",
+    "layout": ['coso', 'otro_coso'],
+    "children": {
+        "coso": {
+            "ui_type": "input",
+            "value": "{{variable}}"
+        },
+        "otro_coso": {
+            "ui_type": "buttom",
+            "text": "{{variable}}"
+        }
+    }
+})
+
+--------------------------
+-- Uso del jquery:
+   - jwk.net.core.js
+     $("iframe").each(.. //para iterar sobre los elementos iframe
+     $(this)[0] // para obtener referencia al iframe
+     fr.offset(); // fr es un $(iframe).
+     fr.width()
+     fr.height()
+     fr.css("border-left-width")
+     body.width()  // body = $("body")
+   - net.draganddrop.js
+     body.addClass("drop-reject");
+     body.removeClass("drop-reject");
+     target.closest(draggable.target); // se usa para saber si target es descendiente de draggable.target
+     target.remove();
+     target.attr("style", restaure_style);
+     var aux = $(ev.html).appendTo("body");
+   - jwk.ui.html.set-selectable.js
+     item_elem.siblings(":first")
+     controller.group().filter("."+controller.options.focussedClass);
+     $(event.target).closest(item_selector);
+     var parent = item_elem.parent();
+     
+
+Dependencia con jquery    
+    $(ev.html).appendTo("body");
+    $("body").addClass("drop-reject");
+    $("body").removeClass("drop-accept").removeClass("drop-reject");
+    $(data.html).appendTo(body).id("AUX");
+    helper.remove();
+    body.removeChild( container );
+    --
+    $("body").width();
+    target.css("position","absolute").offset(aux.offset())     
+     
+     
+-- Dependencias:
+   Mustache: solo lo usa el ui. Cambiarlo por el Handlebars y que no quede embebido sino que exista la dependencia
+   shortcut: la biblioteca no lo usa. Se puede sacar. Solo el windows-manager lo utiliza (y encima está mal implementado)
+   less: internamente no se usa. Solo se implementa la func less.toCSS(). Lo usa el jwebdesk en el repository.
+   md5, sha1, sha256: internamente no se usa. Se usa en jwebdesk.Node.prototype.setData para el hash de los archivos
+   Async: jwebdesk.Node.prototype.copy_to para hacer copia de varios archivos secuencialmente
+
+-- HACKS: 
+-- jwk.observer.js - pre_trigger()
+   if (listener.context && listener.context._destroyed) continue;
+   eso acopla esta clase con la biblioteca jwk.ui y no tiene nada que ver.
+   Incluso la forma re sacada de la manga con una variable "_destroyed" ???
