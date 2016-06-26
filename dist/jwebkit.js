@@ -483,6 +483,15 @@ function TreeQuery(selector, context) {
     
 }
 
+// http://stackoverflow.com/a/2970667
+TreeQuery.utils = {
+    toCamelCase: function (str) {
+        return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+            return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+        }).replace(/[\s-]+/g, '')
+    }
+}
+
 TreeQuery.prototype = TreeQuery_prototype;
 TreeQuery_prototype.constructor = TreeQuery;
 TreeQuery_prototype._tqGetStrategy = function () {
@@ -976,10 +985,10 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
         return !!node.className.match(reg);
     },
     _tq_get_css: function (node, key) {
-        return node.style[key]
+        return node.style[TreeQuery.utils.toCamelCase(key)]
     },
     _tq_set_css: function (node, key, value) {
-        return node.style[key] = value;        
+        return node.style[TreeQuery.utils.toCamelCase(key)] = value;        
     },
     _tq_get_attr: function (node, key) {
         console.assert(this._tq_accepts(node), node);        
@@ -1080,7 +1089,7 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
     },
     _tq_offset: function (node, new_value) {
         if (new_value) {
-            node.style.width= new_value;
+            console.error("ERROR: _tq_offset(arguments[2]) not implemented");            
             return this;
         }
         return {top: node.offsetTop, left: node.offsetLeft};
@@ -1147,8 +1156,13 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
         }
         return this;
     },
-    offset: function () {
-        return {
+    offset: function (value) {
+        if (value) {
+            this.css({
+                top:  (typeof value.top == "number"  ? value.top  + "px" : value.top),
+                left: (typeof value.left == "number" ? value.left + "px" : value.left)
+            });
+        } else return {
             top: this[0].offsetTop,
             left: this[0].offsetLeft
         }
@@ -1182,7 +1196,7 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
     hasClass: function (classname) {
         return this._tq_strategy._tq_has_class(this[0], classname);
     },
-    css: function (key, val) {
+    css: function (key, val) {        
         if (arguments.length == 1) {
             if (typeof key == "object") {
                 for (var i in key) {
@@ -1193,7 +1207,7 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
 
             if (typeof key == "string") {
                 if (this.length == 0) return null;
-                return self._tq_strategy._tq_set_css(this[0], key, val);          
+                return this._tq_strategy._tq_get_css(this[0], key);
             }
         }
         
