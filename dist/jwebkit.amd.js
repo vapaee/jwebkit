@@ -642,21 +642,21 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
             node.style.width= new_value;
             return this;
         }
-        return node.offsetWidth();
+        return {top: node.offsetTop, left: node.offsetLeft};
     },
     _tq_width: function (node, new_value) {
         if (new_value) {
             node.style.width= new_value;
             return this;
         }
-        return node.offsetWidth();
+        return node.offsetWidth;
     },
     _tq_height: function (node, new_value) {
         if (new_value) {
             node.style.height = new_value;
             return this;
         }
-        return node.offsetHeight();
+        return node.offsetHeight;
     },
 });
 ;TreeQuery._tq_register_stratgy("js-object", {
@@ -923,7 +923,7 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
                 self._tq_strategy._tq_height(element, new_value);
             });            
         } else {
-           return this._tq_strategy._tq_height(element);
+           return this._tq_strategy._tq_height(this[0]);
         }
     },
     width: function (new_value) {
@@ -935,7 +935,7 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
                 self._tq_strategy._tq_width(element, new_value);
             });            
         } else {
-           return this._tq_strategy._tq_width(element);
+           return this._tq_strategy._tq_width(this[0]);
         }
     },
     

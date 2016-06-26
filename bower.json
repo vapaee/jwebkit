@@ -10,7 +10,7 @@
   "keywords": [
     "jwebdesk",
     "webapp",
-    "cross domain",  
+    "cross domain",
     "ui",
     "jwebkit",
     "jwk"
@@ -19,7 +19,7 @@
     {
       "name": "Viterbo Rodríguez Flániguen",
       "email": "viter.rod@gmail.com",
-      "homepage": "http://viterborodriguez.com" 
+      "homepage": "http://viterborodriguez.com"
     }
   ],
   "license": "MIT",
@@ -46,6 +46,6 @@
     "qunit": "~1.18.0"
   },
   "dependencies": {
-    "treequery": "~0.1.0"
+    "treequery": "^0.1.2"
   }
 }
