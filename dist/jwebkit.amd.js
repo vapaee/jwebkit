@@ -177,6 +177,42 @@ TreeQuery.Filters.TageNameFilter.prototype.check = function (node, strategy) {
     return strategy._tq_tag_name(node).toLowerCase() == this._tagname;
 }
 
+TreeQuery.Filters.AttrValueFilter = function (str) {
+    console.assert(typeof str == "string", str);
+    if (str.indexOf("!=") != -1) {
+        this._attr_name = str.split("!=")[0];
+        this._attr_value = str.split("!=")[1];
+        this._attr_op = "!=";
+    } else if (str.indexOf("=") != -1) {
+        this._attr_name = str.split("=")[0];
+        this._attr_value = str.split("=")[1];
+        this._attr_op = "=";
+    } else {
+        this._attr_name = str;
+        this._attr_value = null;
+        this._attr_op = null;
+    }    
+}
+TreeQuery.Filters.AttrValueFilter.prototype = new TreeQuery.Filters();
+TreeQuery.Filters.AttrValueFilter.prototype.constructor = TreeQuery.Filters.AttrValueFilter
+TreeQuery.Filters.AttrValueFilter.prototype.check = function (node, strategy) {    
+    var map = strategy._tq_map_attr(node);    
+    switch (this._attr_op) {
+        case "!=":
+            if (typeof map[this._attr_name] == "undefined") return false;
+            if (map[this._attr_name] != this._attr_value) return true;
+            break;
+        case "=": 
+            if (typeof map[this._attr_name] == "undefined") return false;
+            if (map[this._attr_name] == this._attr_value) return true;
+            break;
+        case null:
+            if (typeof map[this._attr_name] != "undefined") return true;
+            break;
+    }
+    return false;
+}
+
 
 TreeQuery.Filters.IdFilter = function (id) {
     this._id = id.toLowerCase();    
@@ -328,9 +364,13 @@ TreeQuery.Engine = {
         */
         // ------
         var FUNCTION = /:(\w+)\(/,
-            MODIFIER = /:(\w+)/
-        ;
-        var parts, tagname, id, class_list, modifier, modif_func, aster;
+            MODIFIER = /:(\w+)/,
+            ATTRIBS_4 = /\[(.+)\]\[(.+)\]\[(.+)\]\[(.+)\]/,
+            ATTRIBS_3 = /\[(.+)\]\[(.+)\]\[(.+)\]/,
+            ATTRIBS_2 = /\[(.+)\]\[(.+)\]/,
+            ATTRIBS_1 = /\[(.+)\]/;
+        
+        var parts, tagname, id, class_list, modifier, modif_func, aster, attrs;
         
         tagname = selector;
         
@@ -358,15 +398,27 @@ TreeQuery.Engine = {
             modifier = parts[1];            
             id = parts[1].split("[")[0].split(":")[0];
         }
-        
+                
         if (FUNCTION.test(selector)) {
             // [":not(", "not"]
-            var parts = text.match(FUNCTION);
+            var parts = selector.match(FUNCTION);
             modif_func = parts[1];
         } else if (MODIFIER.test(selector)) {
-            // [":not(", "not"]
-            var parts = text.match(MODIFIER);
+            // [":hover", "hover"]
+            var parts = selector.match(MODIFIER);
             modifier = parts[1];
+        } else if (ATTRIBS_4.test(selector)) {
+            attrs = selector.match(ATTRIBS_4);
+            attrs.splice(0,1);            
+        } else if (ATTRIBS_3.test(selector)) {
+            attrs = selector.match(ATTRIBS_3);
+            attrs.splice(0,1);
+        } else if (ATTRIBS_2.test(selector)) {
+            attrs = selector.match(ATTRIBS_2);
+            attrs.splice(0,1);
+        } else if (ATTRIBS_1.test(selector)) {
+            attrs = selector.match(ATTRIBS_1);
+            attrs.splice(0,1);
         }
         
         // console.log(selector, "-->", tagname, id, class_list);
@@ -375,6 +427,13 @@ TreeQuery.Engine = {
         
         if (aster) {
             filter.append(new TreeQuery.Filters.AsterFilter())
+        }
+        if (attrs) {
+            console.debug("attrs: ", attrs);
+            tagname = tagname.split("[")[0];
+            for (var i=0; i<attrs.length; i++) {                
+                filter.append(new TreeQuery.Filters.AttrValueFilter(attrs[i]))
+            }
         }
         if (tagname) {
             filter.append(new TreeQuery.Filters.TageNameFilter(tagname))
