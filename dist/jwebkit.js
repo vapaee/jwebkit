@@ -1044,7 +1044,15 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
         return !!node.className.match(reg);
     },
     _tq_get_css: function (node, key) {
-        return node.style[TreeQuery.utils.toCamelCase(key)]
+        var value = node.style[TreeQuery.utils.toCamelCase(key)];
+        if (value == "") {
+            if (window && typeof window.getComputedStyle == "function") {
+                value = window.getComputedStyle( node )[key];
+            } else {
+                console.error("window.getComputedStyle does not exist. we cant get the current value of css property key: ", key);
+            }
+        }        
+        return value;
     },
     _tq_set_css: function (node, key, value) {
         return node.style[TreeQuery.utils.toCamelCase(key)] = value;        
