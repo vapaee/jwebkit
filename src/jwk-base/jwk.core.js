@@ -260,17 +260,30 @@ define("jwk-base/jwk.core", [
                         current = next;
                     }
                 } else {
+                    var val = obj[prop];
                     if (in_depth === true) {
-                        if (jwk.isBV(obj[prop])) {
-                            target[prop] = obj[prop];
-                        } else if (jwk.isPMO(obj[prop])) {
-                            target[prop] = jwk.extend(true, {}, target[prop], obj[prop]);
-                        } else {                            
-                            // leave the objet as it is
-                            target[prop] = obj[prop];
+                        var copy_in_depth = function (val) {
+                            if (jwk.isBV(val)) {
+                                return val;
+                                // target[prop] = val;
+                            } else if (jwk.isPMO(val)) {
+                                return jwk.extend(true, {}, val);;
+                                // target[prop] = jwk.extend(true, {}, target[prop], val);
+                            } else if (Array.isArray(val)) {
+                                var copy = val.map(function (n) {
+                                    return copy_in_depth(n);
+                                });
+                                console.assert(val[0] != copy[0]);
+                                return copy;
+                            } else {                            
+                                // leave the objet as it is
+                                return val;
+                            }
                         }
+                        target[prop] = copy_in_depth(val);
+                        console.assert(target[prop]);
                     } else {
-                        target[prop] = obj[prop];
+                        target[prop] = val;
                     }                    
                 }                
             }

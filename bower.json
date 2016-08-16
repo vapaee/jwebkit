@@ -1,6 +1,6 @@
 {
   "name": "jwebkit.js",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "homepage": "https://github.com/vapaee/jwebkit",
   "description": "Generic webapp library set. It was create to build jwebdesk.",
   "main": "main.js",
@@ -46,6 +46,6 @@
     "qunit": "~1.18.0"
   },
   "dependencies": {
-    "treequery": "^0.1.5"
+    "treequery": "^0.1.6"
   }
 }
