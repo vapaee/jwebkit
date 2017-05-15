@@ -241,7 +241,14 @@ define("jwk-base/jwk.core", [
     jwk.extend = function (in_depth) {        
         var target = arguments[0];
         var start_from = 1;
-        if (in_depth === true) { target = arguments[1]; start_from = 2; }
+        if (in_depth === true) { 
+            target = arguments[1];
+            start_from = 2;            
+            if (!target || typeof target != "object") {
+                console.error("ERROR: target not defined in jwk.extend. target:", target, ", arguments:", arguments);
+                return null;
+            }
+        }
         for (var i=start_from; i<arguments.length; i++) {
             var obj = arguments[i];
             for (var prop in obj) {
@@ -262,26 +269,27 @@ define("jwk-base/jwk.core", [
                 } else {
                     var val = obj[prop];
                     if (in_depth === true) {
-                        var copy_in_depth = function (val) {
+                        var copy_in_depth = function (current, val) {
                             if (jwk.isBV(val)) {
-                                return val;
-                                // target[prop] = val;
+                                return val;                                
                             } else if (jwk.isPMO(val)) {
-                                return jwk.extend(true, {}, val);;
-                                // target[prop] = jwk.extend(true, {}, target[prop], val);
+                                if (jwk.isPMO(current)) {
+                                    return jwk.extend(true, {}, current, val);
+                                } else {
+                                    return jwk.extend(true, {}, val);
+                                }                                
                             } else if (Array.isArray(val)) {
                                 var copy = val.map(function (n) {
-                                    return copy_in_depth(n);
+                                    return copy_in_depth({},n);
                                 });
-                                console.assert(val[0] != copy[0]);
+                                console.assert(val != copy, "ERROR: copy_in_depth didn't work properly", val, copy);
                                 return copy;
-                            } else {                            
-                                // leave the objet as it is
+                            } else {                                
                                 return val;
                             }
                         }
-                        target[prop] = copy_in_depth(val);
-                        console.assert(target[prop]);
+                        target[prop] = copy_in_depth(target[prop], val);
+                        console.assert(typeof target[prop] == typeof val, prop, target[prop], val);
                     } else {
                         target[prop] = val;
                     }                    
@@ -367,8 +375,7 @@ define("jwk-base/jwk.core", [
 		}
         if (typeof obj != "object") return typeof obj;        
         if (typeof obj === "object") {
-            var _key = toString.call(obj);
-            console.log(_key);
+            var _key = toString.call(obj);            
             var _ret = class2type[ _key ];
             //console.log(_ret);
             for (var i in class2type) {

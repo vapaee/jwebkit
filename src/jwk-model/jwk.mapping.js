@@ -36,7 +36,12 @@ define("jwk-model/jwk.mapping", [
         if (json && !skip_check) {
             if (!is_pure_map_object(json)) return console.error("ERROR: parameter is not a valid map object:", json);
         }
-        this._names = [];
+        var _names = [];
+        Object.defineProperty(this, "_names", {
+            enumerable: false, configurable: false,
+            get : function () { return _names; },
+            set : function (_val) { return _names = _val; }
+        });       
         if (json) this.map(json, true);
     }
     

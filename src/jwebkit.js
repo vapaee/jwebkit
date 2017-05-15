@@ -12,12 +12,18 @@ define("jwebkit", [
     if (!define.amd || define.amd.fake) {
         window.jwk = jwk;
     }
-    console.debug("-- jwebkit --", jwk);
+    
+    if (typeof angular == "object" && typeof angular.module == "function") {
+        angular.module('jwebkit',[]).factory("jwebkit", function() {
+            return jwk;
+        });        
+    }
+    
+    console.debug("-- jwebkit --", [jwk]);
     return jwk;    
 });
 
 if (window["jwebkit_must_require"]) {
-    console.log("jwebkit_must_require");
     requirejs("jwebkit");
 } else {
     

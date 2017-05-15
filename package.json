@@ -1,6 +1,6 @@
 {
   "name": "jwebkit",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Generic webapp library set. It was create to build jwebdesk.",
   "main": "main.js",
   "scripts": {

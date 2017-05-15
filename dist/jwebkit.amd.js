@@ -603,7 +603,15 @@ BaseStrategy.prototype._tq_id = function (node, new_id) {
         return !!node.className.match(reg);
     },
     _tq_get_css: function (node, key) {
-        return node.style[TreeQuery.utils.toCamelCase(key)]
+        var value = node.style[TreeQuery.utils.toCamelCase(key)];
+        if (value == "") {
+            if (window && typeof window.getComputedStyle == "function") {
+                value = window.getComputedStyle( node )[key];
+            } else {
+                console.error("window.getComputedStyle does not exist. we cant get the current value of css property key: ", key);
+            }
+        }        
+        return value;
     },
     _tq_set_css: function (node, key, value) {
         return node.style[TreeQuery.utils.toCamelCase(key)] = value;        
@@ -2045,7 +2053,14 @@ define("jwk-base/jwk.core", [
     jwk.extend = function (in_depth) {        
         var target = arguments[0];
         var start_from = 1;
-        if (in_depth === true) { target = arguments[1]; start_from = 2; }
+        if (in_depth === true) { 
+            target = arguments[1];
+            start_from = 2;            
+            if (!target || typeof target != "object") {
+                console.error("ERROR: target not defined in jwk.extend. target:", target, ", arguments:", arguments);
+                return null;
+            }
+        }
         for (var i=start_from; i<arguments.length; i++) {
             var obj = arguments[i];
             for (var prop in obj) {
@@ -2066,26 +2081,27 @@ define("jwk-base/jwk.core", [
                 } else {
                     var val = obj[prop];
                     if (in_depth === true) {
-                        var copy_in_depth = function (val) {
+                        var copy_in_depth = function (current, val) {
                             if (jwk.isBV(val)) {
-                                return val;
-                                // target[prop] = val;
+                                return val;                                
                             } else if (jwk.isPMO(val)) {
-                                return jwk.extend(true, {}, val);;
-                                // target[prop] = jwk.extend(true, {}, target[prop], val);
+                                if (jwk.isPMO(current)) {
+                                    return jwk.extend(true, {}, current, val);
+                                } else {
+                                    return jwk.extend(true, {}, val);
+                                }                                
                             } else if (Array.isArray(val)) {
                                 var copy = val.map(function (n) {
-                                    return copy_in_depth(n);
+                                    return copy_in_depth({},n);
                                 });
-                                console.assert(val[0] != copy[0]);
+                                console.assert(val != copy, "ERROR: copy_in_depth didn't work properly", val, copy);
                                 return copy;
-                            } else {                            
-                                // leave the objet as it is
+                            } else {                                
                                 return val;
                             }
                         }
-                        target[prop] = copy_in_depth(val);
-                        console.assert(target[prop]);
+                        target[prop] = copy_in_depth(target[prop], val);
+                        console.assert(typeof target[prop] == typeof val, prop, target[prop], val);
                     } else {
                         target[prop] = val;
                     }                    
@@ -2171,8 +2187,7 @@ define("jwk-base/jwk.core", [
 		}
         if (typeof obj != "object") return typeof obj;        
         if (typeof obj === "object") {
-            var _key = toString.call(obj);
-            console.log(_key);
+            var _key = toString.call(obj);            
             var _ret = class2type[ _key ];
             //console.log(_ret);
             for (var i in class2type) {
@@ -3089,10 +3104,23 @@ define("jwk-model/jwk.observable", [
 ], function(jwk) {  
 
     var default_delay = 25;
-    
+ 
     jwk.Observable = function () {
-        this._listeners = {};
-        this._filters   = {}; // this is not fully implemented but already works: target._filters["event-name"] = function (args) { /* modification */ return args; }
+        var _listeners = {};
+        var _filters   = {}; // this is not fully implemented but already works: target._filters["event-name"] = function (args) { /* modification */ return args; }
+        
+        Object.defineProperty(this, "_listeners", {
+            enumerable: false, configurable: false,
+            get : function () { return _listeners; },
+            set : function (_val) { return _listeners = _val; }
+        });        
+        
+        Object.defineProperty(this, "_filters", {
+            enumerable: false, configurable: false,
+            get : function () { return _filters; },
+            set : function (_val) { return _filters = _val; }
+        });
+        
     }
 
     jwk.Observable.extend = function (obj) {
@@ -3144,7 +3172,7 @@ define("jwk-model/jwk.observable", [
         if (event_name.indexOf(" ") >= 0) {
             var events = event_name.split(" ");
             for (var ev=0; ev<events.length; ev++) {
-                this.on(events[ev], callback, context, once);
+                this.on(events[ev], callback, context, options);
             }
             return this;
         }
@@ -3268,7 +3296,7 @@ define("jwk-model/jwk.observable", [
                 continue; 
             }
             
-            if (listener.lazy) {                
+            if (typeof listener.lazy != "undefined") {
                 (function (_l, _a, _list) {
                     console.assert(_l.lazy && !isNaN(_l.lazy.delay), "ERROR: delay lazy invocation missing");
                     // _l.lazy.last_time = (new Date()).getTime();
@@ -3429,7 +3457,12 @@ define("jwk-model/jwk.mapping", [
         if (json && !skip_check) {
             if (!is_pure_map_object(json)) return console.error("ERROR: parameter is not a valid map object:", json);
         }
-        this._names = [];
+        var _names = [];
+        Object.defineProperty(this, "_names", {
+            enumerable: false, configurable: false,
+            get : function () { return _names; },
+            set : function (_val) { return _names = _val; }
+        });       
         if (json) this.map(json, true);
     }
     
@@ -4084,7 +4117,12 @@ define("jwk-model/jwk.flagged", [
 ], function(jwk) {
     console.assert(jwk.Deferred, jwk)
     jwk.Flagged = function () {
-        this._flags = { _deferreds: {} }        
+        var _flags = { _deferreds: {} };
+        Object.defineProperty(this, "_flags", {
+            enumerable: false, configurable: false,
+            get : function () { return _flags; },
+            set : function (_val) { return _flags = _val; }
+        });       
     }
 
     jwk.Flagged.extend = function (obj) {
@@ -11497,12 +11535,18 @@ define("jwebkit", [
     if (!define.amd || define.amd.fake) {
         window.jwk = jwk;
     }
-    console.debug("-- jwebkit --", jwk);
+    
+    if (typeof angular == "object" && typeof angular.module == "function") {
+        angular.module('jwebkit',[]).factory("jwebkit", function() {
+            return jwk;
+        });        
+    }
+    
+    console.debug("-- jwebkit --", [jwk]);
     return jwk;    
 });
 
 if (window["jwebkit_must_require"]) {
-    console.log("jwebkit_must_require");
     requirejs("jwebkit");
 } else {
     

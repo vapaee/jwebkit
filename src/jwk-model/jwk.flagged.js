@@ -3,7 +3,12 @@ define("jwk-model/jwk.flagged", [
 ], function(jwk) {
     console.assert(jwk.Deferred, jwk)
     jwk.Flagged = function () {
-        this._flags = { _deferreds: {} }        
+        var _flags = { _deferreds: {} };
+        Object.defineProperty(this, "_flags", {
+            enumerable: false, configurable: false,
+            get : function () { return _flags; },
+            set : function (_val) { return _flags = _val; }
+        });       
     }
 
     jwk.Flagged.extend = function (obj) {

@@ -20,10 +20,23 @@ define("jwk-model/jwk.observable", [
 ], function(jwk) {  
 
     var default_delay = 25;
-    
+ 
     jwk.Observable = function () {
-        this._listeners = {};
-        this._filters   = {}; // this is not fully implemented but already works: target._filters["event-name"] = function (args) { /* modification */ return args; }
+        var _listeners = {};
+        var _filters   = {}; // this is not fully implemented but already works: target._filters["event-name"] = function (args) { /* modification */ return args; }
+        
+        Object.defineProperty(this, "_listeners", {
+            enumerable: false, configurable: false,
+            get : function () { return _listeners; },
+            set : function (_val) { return _listeners = _val; }
+        });        
+        
+        Object.defineProperty(this, "_filters", {
+            enumerable: false, configurable: false,
+            get : function () { return _filters; },
+            set : function (_val) { return _filters = _val; }
+        });
+        
     }
 
     jwk.Observable.extend = function (obj) {
@@ -75,7 +88,7 @@ define("jwk-model/jwk.observable", [
         if (event_name.indexOf(" ") >= 0) {
             var events = event_name.split(" ");
             for (var ev=0; ev<events.length; ev++) {
-                this.on(events[ev], callback, context, once);
+                this.on(events[ev], callback, context, options);
             }
             return this;
         }
@@ -199,7 +212,7 @@ define("jwk-model/jwk.observable", [
                 continue; 
             }
             
-            if (listener.lazy) {                
+            if (typeof listener.lazy != "undefined") {
                 (function (_l, _a, _list) {
                     console.assert(_l.lazy && !isNaN(_l.lazy.delay), "ERROR: delay lazy invocation missing");
                     // _l.lazy.last_time = (new Date()).getTime();
